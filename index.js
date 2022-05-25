@@ -20,6 +20,7 @@ async function run() {
         await client.connect();
         const toolCollection = client.db("DB").collection("Tool");
         const reviewCollection = client.db("DB").collection("Review");
+        const OrderCollection = client.db("DB").collection("Order");
         // Get Review
         app.get('/review', async (req, res) => {
             const query = {};
@@ -40,15 +41,35 @@ async function run() {
             const tool = await cursor.toArray();
             res.send(tool);
         })
+        // Get Tool
+        app.get('/tool/:id', async(req,res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const tool = await toolCollection.findOne(query);
+            res.send(tool);
+        })
 
         // Post Tools
         app.post('/tool', async (req, res) => {
             const newTool = req.body;
-            console.log('adding new Tool', newTool);
             const tool = await toolCollection.insertOne(newTool);
             res.send({ tool });
         })
-        // Post Tools
+        // Get Order
+        app.get('/order', async (req, res) => {
+            const query = {};
+            const cursor = OrderCollection.find(query);
+            const order = await cursor.toArray();
+            res.send(order);
+        })
+        // Get Order
+        app.post('/order', async (req, res) => {
+            const newOrder = req.body;
+            console.log('adding new Tool', newOrder);
+            const order = await OrderCollection.insertOne(newOrder);
+            res.send({ order });
+        })
+        // delete Tools
         app.delete('/tool/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
