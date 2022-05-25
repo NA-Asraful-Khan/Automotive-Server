@@ -77,6 +77,14 @@ async function run() {
             res.send(tool);
         })
 
+        // delete Order
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const order = await OrderCollection.deleteOne(query);
+            res.send(order);
+        })
+
 
     } finally {
         // close later 
