@@ -1,7 +1,11 @@
 const express = require('express')
 const app = express()
 const cors = require('cors');
+var jwt = require('jsonwebtoken');
+require('dotenv').config()
 const port = process.env.PORT || 5000;
+
+const jwtoken = "d6b100a63acbfaf814115a3ef612aa45d9b58cf3debdc29b63914dae7070388d1666b2c7a0c45bb4569937cd863c2d554c1da4d7de41917271f45ce41f9d4407"
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId;
@@ -12,7 +16,7 @@ app.use(express.json());
 // U: admin1
 // p: 1ApegYpEmvoOePDT
 
-const uri = "mongodb+srv://admin1:1ApegYpEmvoOePDT@tools.a2ksy.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://admin1:1ApegYpEmvoOePDT@tools.a2ksy.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
@@ -58,15 +62,24 @@ async function run() {
         })
         // Get Order
         app.get('/order', async (req, res) => {
-            const query = {};
+            
+            const email = req.query.email;
+            const query = {}
             const cursor = OrderCollection.find(query);
             const order = await cursor.toArray();
             res.send(order);
         })
-        // Get Order
+        app.get('/order', async (req, res) => {
+            
+            const email = req.query.email;
+            const query = {email:email}
+            const cursor = OrderCollection.find(query);
+            const order = await cursor.toArray();
+            res.send(order);
+        })
+        // Post Order
         app.post('/order', async (req, res) => {
             const newOrder = req.body;
-            console.log('adding new Tool', newOrder);
             const order = await OrderCollection.insertOne(newOrder);
             res.send({ order });
         })
@@ -97,7 +110,8 @@ async function run() {
                 $set: user
            };
            const result = await userCollection.updateOne(filter,updateDoc,options);
-           res.send(result);
+           const token = jwt.sign({email: email}, jwtoken,{expiresIn:'1h'});
+           res.send({result, token});
         })
 
 
@@ -108,7 +122,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send("Success")
 })
 
 app.listen(port, () => {
