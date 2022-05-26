@@ -62,8 +62,6 @@ async function run() {
         })
         // Get Order
         app.get('/order', async (req, res) => {
-
-            const email = req.query.email;
             const query = {}
             const cursor = OrderCollection.find(query);
             const order = await cursor.toArray();
@@ -77,6 +75,15 @@ async function run() {
             const order = await cursor.toArray();
             res.send(order);
         })
+
+        app.get('/order/admin', async (req, res) => {
+            const email = req.query.email;
+            const query = {email:email}
+            const cursor = OrderCollection.find(query);
+            const order = await cursor.toArray();
+            res.send(order);
+        })
+
         // Post Order
         app.post('/order', async (req, res) => {
             const newOrder = req.body;
@@ -104,17 +111,22 @@ async function run() {
             const user = await cursor.toArray();
             res.send(user);
         })
-        // Put user
+        // GET user
+        app.get('/user/admin', async (req, res) => {
+            const query = {}
+            const cursor = userCollection.find(query);
+            const order = await cursor.toArray();
+            res.send(order);
+        })
 
-        app.put('/user/admin/:email', async (req, res) => {
+        app.get('/user/:email', async (req, res) => {
             const email = req.params.email;
-            const filter = { email: email };
-            const updateDoc = {
-                $set: {role:'Admin'},
-            };
-            const result = await userCollection.updateOne(filter, updateDoc);
+            const query = { email: email };
+            const result = await userCollection.findOne(query);
             res.send(result);
         })
+        // Put user
+        
 
         // Put user
 
