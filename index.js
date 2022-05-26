@@ -47,9 +47,9 @@ async function run() {
             res.send(tool);
         })
         // Get Tool
-        app.get('/tool/:id', async(req,res) =>{
+        app.get('/tool/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: ObjectId(id)};
+            const query = { _id: ObjectId(id) };
             const tool = await toolCollection.findOne(query);
             res.send(tool);
         })
@@ -62,7 +62,7 @@ async function run() {
         })
         // Get Order
         app.get('/order', async (req, res) => {
-            
+
             const email = req.query.email;
             const query = {}
             const cursor = OrderCollection.find(query);
@@ -70,9 +70,9 @@ async function run() {
             res.send(order);
         })
         app.get('/order', async (req, res) => {
-            
+
             const email = req.query.email;
-            const query = {email:email}
+            const query = { email: email }
             const cursor = OrderCollection.find(query);
             const order = await cursor.toArray();
             res.send(order);
@@ -98,20 +98,37 @@ async function run() {
             const order = await OrderCollection.deleteOne(query);
             res.send(order);
         })
+        // GET user
+        app.get('/user', async (req, res) => {
+            const cursor = userCollection.find();
+            const user = await cursor.toArray();
+            res.send(user);
+        })
+        // Put user
+
+        app.put('/user/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const updateDoc = {
+                $set: {role:'Admin'},
+            };
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
 
         // Put user
 
         app.put('/user/:email', async (req, res) => {
-           const email = req.params.email;
-           const user = req.body;
-           const filter = {email: email};
-           const options = {upsert: true};
-           const updateDoc ={
+            const email = req.params.email;
+            const user = req.body;
+            const filter = { email: email };
+            const options = { upsert: true };
+            const updateDoc = {
                 $set: user
-           };
-           const result = await userCollection.updateOne(filter,updateDoc,options);
-           const token = jwt.sign({email: email}, jwtoken,{expiresIn:'1h'});
-           res.send({result, token});
+            };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            const token = jwt.sign({ email: email }, jwtoken, { expiresIn: '1h' });
+            res.send({ result, token });
         })
 
 
