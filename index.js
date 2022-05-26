@@ -21,6 +21,7 @@ async function run() {
         const toolCollection = client.db("DB").collection("Tool");
         const reviewCollection = client.db("DB").collection("Review");
         const OrderCollection = client.db("DB").collection("Order");
+        const userCollection = client.db("DB").collection("User");
         // Get Review
         app.get('/review', async (req, res) => {
             const query = {};
@@ -83,6 +84,20 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const order = await OrderCollection.deleteOne(query);
             res.send(order);
+        })
+
+        // Put user
+
+        app.put('/user/:email', async (req, res) => {
+           const email = req.params.email;
+           const user = req.body;
+           const filter = {email: email};
+           const options = {upsert: true};
+           const updateDoc ={
+                $set: user
+           };
+           const result = await userCollection.updateOne(filter,updateDoc,options);
+           res.send(result);
         })
 
 
