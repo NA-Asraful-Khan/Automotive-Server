@@ -26,7 +26,6 @@ async function run() {
         const reviewCollection = client.db("DB").collection("Review");
         const OrderCollection = client.db("DB").collection("Order");
         const userCollection = client.db("DB").collection("User");
-        const UpCollection = client.db("DB").collection("Update");
         // Get Review
         app.get('/review', async (req, res) => {
             const query = {};
@@ -116,8 +115,8 @@ async function run() {
         app.get('/user/admin', async (req, res) => {
             const query = {}
             const cursor = userCollection.find(query);
-            const order = await cursor.toArray();
-            res.send(order);
+            const result = await cursor.toArray();
+            res.send(result);
         })
 
         app.get('/user/:email', async (req, res) => {
@@ -152,13 +151,7 @@ async function run() {
             res.send({ result, token });
         })
 
-        //update collection
-        app.get('/update', async (req, res) => {
-            const query = {}
-            const cursor = UpCollection.find(query);
-            const order = await cursor.toArray();
-            res.send(order);
-        })
+        //update User Profile
 
         app.get('/update/:email', async (req, res) => {
             const email = req.query.email;
@@ -167,6 +160,7 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+
         app.put("/update/:email",async(req,res)=>{
             const email = req.params.email;
             const updateUser = req.body;
