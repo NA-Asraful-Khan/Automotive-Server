@@ -115,14 +115,7 @@ async function run() {
         app.get('/user/admin', async (req, res) => {
             const query = {}
             const cursor = userCollection.find(query);
-            const order = await cursor.toArray();
-            res.send(order);
-        })
-
-        app.get('/user/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            const result = await userCollection.findOne(query);
+            const result = await cursor.toArray();
             res.send(result);
         })
         // Put user
@@ -150,6 +143,36 @@ async function run() {
             const token = jwt.sign({ email: email }, jwtoken, { expiresIn: '1h' });
             res.send({ result, token });
         })
+
+        //update User Profile
+
+        app.get('/user/info', async (req, res) => {
+            const email = req.query.email;
+            const query = {email:email}
+            const cursor = userCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.put("/user/info/:email",async(req,res)=>{
+            const email = req.params.email;
+            const updateUser = req.body;
+            const filter = {email: email };
+            const options = { upsert: true };
+            const updateDoc = {
+              $set: {
+                name: updateUser.name,
+                email: updateUser.email,
+                address: updateUser.address,
+                education: updateUser.education,
+                linkedin: updateUser.linkedin,
+                mobile: updateUser.mobile
+              },
+            };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+      
+          })
 
 
     } finally {
