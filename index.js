@@ -79,7 +79,7 @@ async function run() {
 
         app.get('/order/admin', async (req, res) => {
             const email = req.query.email;
-            const query = {email:email}
+            const query = { email: email }
             const cursor = OrderCollection.find(query);
             const order = await cursor.toArray();
             res.send(order);
@@ -131,7 +131,7 @@ async function run() {
             const email = req.params.email;
             const filter = { email: email };
             const updateDoc = {
-                $set: {role:'Admin'}
+                $set: { role: 'Admin' }
             };
             const result = await userCollection.updateOne(filter, updateDoc);
             res.send(result);
@@ -161,31 +161,30 @@ async function run() {
         })
 
         app.get('/update/:email', async (req, res) => {
-            const email = req.query.email;
-            const query = {email:email}
-            const cursor = UpCollection.find(query);
-            const result = await cursor.toArray();
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await UpCollection.findOne(query);
             res.send(result);
         })
-        app.put("/update/:email",async(req,res)=>{
+        app.put("/update/:email", async (req, res) => {
             const email = req.params.email;
             const updateUser = req.body;
-            const filter = {email: email };
+            const filter = { email: email };
             const options = { upsert: true };
             const updateDoc = {
-              $set: {
-                name: updateUser.name,
-                email: updateUser.email,
-                address: updateUser.address,
-                education: updateUser.education,
-                linkedin: updateUser.linkedin,
-                mobile: updateUser.mobile
-              },
+                $set: {
+                    name: updateUser.name,
+                    email: updateUser.email,
+                    address: updateUser.address,
+                    education: updateUser.education,
+                    linkedin: updateUser.linkedin,
+                    mobile: updateUser.mobile
+                },
             };
             const result = await UpCollection.updateOne(filter, updateDoc, options);
             res.send(result);
-      
-          })
+
+        })
 
 
     } finally {
