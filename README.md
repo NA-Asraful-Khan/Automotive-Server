@@ -1,7 +1,7 @@
 # Site Name: Automotive Parts Manufacturing
 
 
-Live Site Link [Click Here](https://inventory-7521f.web.app/): https://inventory-7521f.web.app/.
+Live Site Link [Click Here](https://tool-e56ed.web.app/): https://tool-e56ed.web.app/.
 
 ## Features 
 * This Website Built with React App
