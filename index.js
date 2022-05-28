@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
 
+
 const jwtoken = "d6b100a63acbfaf814115a3ef612aa45d9b58cf3debdc29b63914dae7070388d1666b2c7a0c45bb4569937cd863c2d554c1da4d7de41917271f45ce41f9d4407"
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -19,6 +20,16 @@ app.use(express.json());
 const uri = `mongodb+srv://admin1:1ApegYpEmvoOePDT@tools.a2ksy.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+function verifyJWT(req,res,next){
+    const authHeader = req.headers.authorization;
+    if(!authHeader){
+        return res.status(401).send({message:"UnAuthorized Access"})
+    }
+    const token = authHeader.split(' ')[1];
+
+
+
+}
 async function run() {
     try {
         await client.connect();
@@ -82,6 +93,13 @@ async function run() {
             const query = { email: email }
             const cursor = OrderCollection.find(query);
             const order = await cursor.toArray();
+            res.send(order);
+        })
+
+        app.get('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const order = await OrderCollection.findOne(query);
             res.send(order);
         })
 
