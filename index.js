@@ -6,6 +6,7 @@ var reviewRoute = require('./routes/review.routes')
 var toolRoute = require('./routes/tool.routes')
 var orderRoute = require('./routes/order.routes')
 var userRoute = require('./routes/user.routes')
+var updateRoute = require('./routes/update.routes')
 require('dotenv').config();
 
 const PORT = process.env.PORT||8000
@@ -19,6 +20,7 @@ app.use('/Review',reviewRoute )
 app.use('/Tool',toolRoute )
 app.use('/Order', orderRoute)
 app.use('/User', userRoute)
+app.use('/Update', updateRoute)
 
 const server=()=>{
     dbConnection()
