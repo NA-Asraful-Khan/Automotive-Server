@@ -4,6 +4,7 @@ const cors = require('cors');
 const { dbConnection } = require('./db/dbConnect');
 var reviewRoute = require('./routes/review.routes')
 var toolRoute = require('./routes/tool.routes')
+var orderRoute = require('./routes/order.routes')
 require('dotenv').config();
 
 const PORT = process.env.PORT||8000
@@ -15,6 +16,7 @@ app.use(express.json());
 //routes
 app.use('/Review',reviewRoute )
 app.use('/Tool',toolRoute )
+app.use('/order', orderRoute)
 
 const server=()=>{
     dbConnection()

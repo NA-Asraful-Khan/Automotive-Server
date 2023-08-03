@@ -32,3 +32,13 @@ module.exports.addTool = async (req, res) => {
        return res.status(500).json(error.message); 
     }
 }
+
+
+module.exports.deleteTool = async(req,res)=>{
+    try {
+        const toolSave = await toolCollection.findByIdAndDelete(req.params.id)
+        return res.status(200).json(toolSave)
+    } catch (error) {
+       return res.status(500).json(error.message); 
+    }
+}
